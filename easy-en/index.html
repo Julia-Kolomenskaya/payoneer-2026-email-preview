@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+  <title>Простая монетизация · EN — предпросмотр</title>
+  <style>
+    :root { color-scheme: dark; font-family: Arial, Helvetica, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: #f5f7fb; background: #0b0f17; }
+    .bar { position: sticky; top: 0; z-index: 2; padding: 16px 20px; background: rgba(20,26,36,.96); border-bottom: 1px solid #283140; backdrop-filter: blur(12px); }
+    .bar__top { display: block; }
+    h1 { margin: 0; font-size: 18px; line-height: 24px; }
+    .email-subject { margin: 6px 0 0; color: #aeb8ca; font-size: 14px; line-height: 20px; font-weight: 400; }
+    .controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    button { padding: 8px 12px; border: 1px solid #58657a; border-radius: 8px; color: #e9edf5; background: #1b2330; cursor: pointer; font: inherit; }
+    button[aria-pressed="true"] { border-color: #4b3cff; background: #4b3cff; }
+    .stage { min-height: calc(100vh - 106px); padding: 28px 12px 64px; overflow-x: auto; text-align: center; }
+    .viewport { display: inline-block; width: min(700px, 100%); min-height: 720px; overflow: hidden; background: #fff; box-shadow: 0 12px 36px rgba(0,0,0,.35); vertical-align: top; }
+    iframe { display: block; width: 100%; min-height: 720px; border: 0; background: #fff; }
+    @media (max-width: 700px) { .bar { position: static; } .stage { min-height: 0; padding-inline: 0; } }
+  </style>
+</head>
+<body>
+  <header class="bar">
+    <div class="bar__top"><h1>Простая монетизация · EN</h1><p class="email-subject">Important: Update your payment details by October 31, 2026</p></div>
+    <nav class="controls" aria-label="Ширина предпросмотра">
+      <button type="button" data-width="700" aria-pressed="true">Desktop 700</button>
+      <button type="button" data-width="375" aria-pressed="false">Mobile 375</button>
+      <button type="button" data-width="360" aria-pressed="false">Mobile 360</button>
+    </nav>
+  </header>
+  <main class="stage"><div class="viewport" id="viewport"><iframe id="email" src="email.html" title="Письмо" sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe></div></main>
+  <script>
+    const frame = document.getElementById('email');
+    const viewport = document.getElementById('viewport');
+    const resize = () => {
+      try {
+        const doc = frame.contentDocument;
+        const height = Math.max(720, doc.documentElement.scrollHeight, doc.body.scrollHeight);
+        frame.style.height = height + 'px';
+      } catch (_) {}
+    };
+    frame.addEventListener('load', () => { resize(); setTimeout(resize, 150); });
+    document.querySelectorAll('[data-width]').forEach(button => button.addEventListener('click', () => {
+      document.querySelectorAll('[data-width]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+      viewport.style.width = button.dataset.width + 'px';
+      setTimeout(resize, 250);
+    }));
+    const requested = new URLSearchParams(location.search).get('width');
+    const requestedButton = document.querySelector(`[data-width="${requested}"]`);
+    if (requestedButton) requestedButton.click();
+  </script>
+</body>
+</html>

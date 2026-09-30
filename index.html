@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+  <title>Обновление платёжных реквизитов · Payoneer — письма на согласование</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <img class="hero__image" src="assets/approval-cover.png" alt="">
+      <div class="hero__shade"></div>
+      <div class="hero__copy"><p class="eyebrow"><span></span>Review</p><h1>Письма на согласование</h1><p>Обновление платёжных реквизитов · Payoneer</p></div>
+    </section>
+    <section class="intro"><div><p class="kicker">Кампания</p><h2>Обновление платёжных реквизитов · Payoneer</h2></div><div><p class="intro__copy">Три версии уведомления: РСЯ на русском и английском, Простая монетизация на английском. Проверьте текст и оформление на компьютере и телефоне.</p><a class="all-open" href="all.html" style="display:inline-flex;margin-top:14px;padding:13px 16px;border-radius:12px;color:#111;background:#e1fa00;text-decoration:none;font-weight:700">Смотреть все письма подряд</a></div></section>
+    <section class="grid"><article class="card">
+  <div class="thumb" data-review-thumb>
+    <div class="thumb__stage"><iframe src="yan-ru/email.html" title="Миниатюра письма 01" tabindex="-1"></iframe></div>
+    <a class="thumb__link" href="yan-ru/" target="_blank" rel="noopener" aria-label="Открыть превью: РСЯ · RU"></a>
+  </div>
+  <div class="card__body">
+    <div class="topline"><span class="number">01</span><span class="status status--pending">На согласовании</span></div>
+    <h3 class="email-name">РСЯ · RU</h3>
+    <p class="email-subject">Важно: обновите платёжные реквизиты до 31 октября 2026 года</p>
+    <a class="open" href="yan-ru/" target="_blank" rel="noopener">Открыть превью <span aria-hidden="true">↗</span></a>
+  </div>
+</article><article class="card">
+  <div class="thumb" data-review-thumb>
+    <div class="thumb__stage"><iframe src="yan-en/email.html" title="Миниатюра письма 02" tabindex="-1"></iframe></div>
+    <a class="thumb__link" href="yan-en/" target="_blank" rel="noopener" aria-label="Открыть превью: РСЯ · EN"></a>
+  </div>
+  <div class="card__body">
+    <div class="topline"><span class="number">02</span><span class="status status--pending">На согласовании</span></div>
+    <h3 class="email-name">РСЯ · EN</h3>
+    <p class="email-subject">Important: Update your payment details by October 31, 2026</p>
+    <a class="open" href="yan-en/" target="_blank" rel="noopener">Открыть превью <span aria-hidden="true">↗</span></a>
+  </div>
+</article><article class="card">
+  <div class="thumb" data-review-thumb>
+    <div class="thumb__stage"><iframe src="easy-en/email.html" title="Миниатюра письма 03" tabindex="-1"></iframe></div>
+    <a class="thumb__link" href="easy-en/" target="_blank" rel="noopener" aria-label="Открыть превью: Простая монетизация · EN"></a>
+  </div>
+  <div class="card__body">
+    <div class="topline"><span class="number">03</span><span class="status status--pending">На согласовании</span></div>
+    <h3 class="email-name">Простая монетизация · EN</h3>
+    <p class="email-subject">Important: Update your payment details by October 31, 2026</p>
+    <a class="open" href="easy-en/" target="_blank" rel="noopener">Открыть превью <span aria-hidden="true">↗</span></a>
+  </div>
+</article></section>
+  </main>
+  <pre id="review-qa" hidden>{"ready":false}</pre>
+  <script>
+    const DESKTOP_WIDTH = 700;
+    const fitThumb = thumb => {
+      const stage = thumb.querySelector('.thumb__stage');
+      const scale = thumb.clientWidth / DESKTOP_WIDTH;
+      stage.style.transform = `scale(${scale})`;
+      stage.dataset.scale = String(scale);
+    };
+    const thumbs = [...document.querySelectorAll('[data-review-thumb]')];
+    const observer = new ResizeObserver(entries => entries.forEach(entry => fitThumb(entry.target)));
+    thumbs.forEach(thumb => { fitThumb(thumb); observer.observe(thumb); });
+
+    const publishQa = () => {
+      const result = {
+        ready: true,
+        viewport: {clientWidth: document.documentElement.clientWidth, scrollWidth: document.documentElement.scrollWidth},
+        documentOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+        brokenImages: [...document.images].filter(image => image.complete && image.naturalWidth === 0).map(image => image.getAttribute('src')),
+        cards: []
+      };
+      thumbs.forEach((thumb, index) => {
+        const stage = thumb.querySelector('.thumb__stage');
+        const frame = thumb.querySelector('iframe');
+        const article = thumb.closest('.card');
+        const number = article.querySelector('.number');
+        const emailName = article.querySelector('.email-name');
+        const emailSubject = article.querySelector('.email-subject');
+        const numberStyle = getComputedStyle(number);
+        const nameStyle = getComputedStyle(emailName);
+        const subjectStyle = getComputedStyle(emailSubject);
+        const thumbRect = thumb.getBoundingClientRect();
+        const stageRect = stage.getBoundingClientRect();
+        const card = {
+          index,
+          loaded: false,
+          fitGap: Math.abs(thumbRect.width - stageRect.width),
+          brokenImages: [],
+          iframeOverflow: null,
+          name: emailName.textContent.trim(),
+          subject: emailSubject.textContent.trim(),
+          nameIsPrimary: parseFloat(nameStyle.fontSize) > parseFloat(subjectStyle.fontSize)
+            && Number(nameStyle.fontWeight) > Number(subjectStyle.fontWeight),
+          colorsMatch: numberStyle.color === 'rgb(245, 247, 251)'
+            && nameStyle.color === 'rgb(245, 247, 251)'
+            && subjectStyle.color === 'rgb(174, 184, 202)'
+        };
+        try {
+          const doc = frame.contentDocument;
+          card.loaded = Boolean(doc && doc.readyState === 'complete');
+          if (doc) {
+            card.brokenImages = [...doc.images].filter(image => image.complete && image.naturalWidth === 0).map(image => image.getAttribute('src'));
+            card.iframeOverflow = doc.documentElement.scrollWidth > doc.documentElement.clientWidth + 1;
+          }
+        } catch (_) {}
+        result.cards.push(card);
+      });
+      document.getElementById('review-qa').textContent = JSON.stringify(result);
+      window.__reviewQa = result;
+    };
+    window.addEventListener('load', () => { setTimeout(publishQa, 250); setTimeout(publishQa, 1200); });
+  </script>
+</body>
+</html>
